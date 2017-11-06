@@ -3,13 +3,10 @@ import { createEpicMiddleware } from 'redux-observable';
 import { createLogger } from 'redux-logger';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { routerMiddleware, routerActions } from 'react-router-redux';
-import createHistory from 'history/createBrowserHistory'
 import { actions as authActions } from '../modules/auth/duck';
 import { rootEpic, rootReducer } from "../modules/index";
 
 import type { authStateType } from "../modules/auth/duck";
-
-const history = createHistory();
 
 const configureStore = (initialState?: authStateType) => {
   const middleware = [];
@@ -46,4 +43,4 @@ const configureStore = (initialState?: authStateType) => {
   return createStore(rootReducer, initialState, enhancer);
 };
 
-export default {configureStore, history};
+export default configureStore;

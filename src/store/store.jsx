@@ -1,10 +1,17 @@
+import { createStore, applyMiddleware } from 'redux';
 import { createEpicMiddleware } from 'redux-observable';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import { actions as authActions } from '../modules/auth/duck';
 import { createLogger } from 'redux-logger';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import { routerMiddleware, routerActions } from 'react-router-redux';
+import createHistory from 'history/createBrowserHistory'
+import { actions as authActions } from '../modules/auth/duck';
 import { rootEpic, rootReducer } from "../modules/index";
 
-const configureStore = (initialState?: todosStateType) => {
+import type { authStateType } from "../modules/auth/duck";
+
+const history = createHistory();
+
+const configureStore = (initialState?: authStateType) => {
   const middleware = [];
   const enhancers = [];
 
@@ -21,8 +28,14 @@ const configureStore = (initialState?: todosStateType) => {
 
   const actionCreators = {
     ...authActions,
+    ...routerActions
   };
 
+  //Router Middleware
+  const router = routerMiddleware(history);
+  middleware.push(router);
+
+  //Redux DevTools
   const composeEnhancers = composeWithDevTools({
     actionCreators
   });
@@ -33,4 +46,4 @@ const configureStore = (initialState?: todosStateType) => {
   return createStore(rootReducer, initialState, enhancer);
 };
 
-export default configureStore;
+export default {configureStore, history};

@@ -60,7 +60,7 @@ export default function authReducer(state: authStateType = {}, action: actionTyp
 export function authEpic(action$: any) {
   return action$.ofType(AUTH_REQUEST)
     .mergeMap(() =>
-      Rx.Observable.of({ id: '123456', name: 'Llanos' })
+      Rx.Observable.of({id: '123456', name: 'Llanos'})
         .delay(2000)
         .map(user => loginSuccess(user))
     );

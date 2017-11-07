@@ -1,8 +1,11 @@
 // @flow
 import Rx from 'rxjs';
+import { ActionsObservable } from "redux-observable";
 // Actions
 const AUTH_REQUEST = 'AUTH_REQUEST';
 const AUTH_SUCCESS = 'AUTH_SUCCESS';
+
+const AUTH_ACTIONS = [AUTH_REQUEST, AUTH_SUCCESS];
 
 type actionType = {
   +type: string,
@@ -57,10 +60,10 @@ export default function authReducer(state: authStateType = {}, action: actionTyp
 }
 
 // EPIC
-export function authEpic(action$: any) {
+export function authEpic(action$: ActionsObservable<any>) {
   return action$.ofType(AUTH_REQUEST)
-    .mergeMap(() =>
-      Rx.Observable.of({id: '123456', name: 'Llanos'})
+    .mergeMap((action: actionType) =>
+      Rx.Observable.of({id: '123456', name: 'Llanos', username: action.username, password: action.password})
         .delay(2000)
         .map(user => loginSuccess(user))
     );

@@ -1,19 +1,20 @@
 // @flow
 import * as React from 'react';
+import PropTypes from 'prop-types';
 
 type Props = {
-  login: (username: string, password: string) => {},
-  isAuth: boolean,
-  user: any,
-  onChange: Function,
-  onSave: Function
+  +login: (username: string, password: string) => {},
+  +isAuth: boolean,
+  +user?: any,
+  +onChange?: Function,
+  +onSave?: Function
 }
 
 type State = {
-  usernameInput: {
+  +usernameInput: {
     value: ''
   },
-  passwordInput: {
+  +passwordInput: {
     value: ''
   }
 }
@@ -66,4 +67,12 @@ export default class Login extends React.Component<Props, State> {
       </div>
     )
   }
+};
+
+Login.propTypes = {
+  login: PropTypes.func.isRequired,
+  isAuth: PropTypes.bool,
+  user: PropTypes.object,
+  onChange: PropTypes.func,
+  onSave: PropTypes.func,
 };

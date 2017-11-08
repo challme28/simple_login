@@ -1,8 +1,12 @@
+import Rx from 'rxjs';
+
 // Actions
 export const REQUEST_POSTS = 'REQUEST_POSTS';
 export const RECEIVE_POSTS = 'RECEIVE_POSTS';
 export const SELECT_SUBREDDIT = 'SELECT_SUBREDDIT';
 export const INVALIDATE_SUBREDDIT = 'INVALIDATE_SUBREDDIT';
+const FETCH_POSTS_IF_NEEDED = 'FETCH_POSTS_IF_NEEDED';
+const FETCH_POSTS = 'FETCH_POSTS';
 
 // Action Creators
 export function selectSubreddit(subreddit) {
@@ -56,11 +60,26 @@ function shouldFetchPosts(state, subreddit) {
 }
 
 export function fetchPostsIfNeeded(subreddit) {
-  return (dispatch, getState) => {
+  return {
+    type: FETCH_POSTS_IF_NEEDED,
+    subreddit
+  }
+  /*return (dispatch, getState) => {
     if (shouldFetchPosts(getState(), subreddit)) {
       return dispatch(fetchPosts(subreddit))
     }
-  }
+  }*/
+}
+
+export function postsEpic(action, store) {
+  return action$.ofType(FETCH_POSTS_IF_NEEDED)
+    .filter(() => shouldFetchPosts(store.getState(), action.subreddit))
+    .switchMap(subreddit =>
+      concat(
+        of(requestPosts(subreddit)),
+        fetch(`https://www.reddit.com/r/${subreddit}.json`)
+          .map(response => receivePosts(subreddit, response.json))
+      ))
 }
 
 // Reducers
@@ -73,14 +92,12 @@ export function selectedSubreddit(state = 'reactjs', action) {
   }
 }
 
-export function posts(
-  state = {
-    isFetching: false,
-    didInvalidate: false,
-    items: []
-  },
-  action
-) {
+export function posts(state = {
+                        isFetching: false,
+                        didInvalidate: false,
+                        items: []
+                      },
+                      action) {
   switch (action.type) {
     case INVALIDATE_SUBREDDIT:
       return Object.assign({}, state, {

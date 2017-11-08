@@ -60,9 +60,20 @@ export default function reducer(state: authStateType = {}, action: actionType): 
 // EPIC
 export function authEpic(action$: ActionsObservable<actionType>) {
   return action$.ofType(AUTH_REQUEST)
-    .mergeMap((action: actionType) =>
-      Rx.Observable.of({id: '123456', name: 'Llanos', username: action.username, password: action.password})
-        .delay(2000)
-        .map(user => loginSuccess(user))
+    .filter(() => true)
+    .switchMap(() =>
+        Rx.Observable.concat(
+          Rx.Observable.of({id: '123456', name: 'Llanos'}).map(user => loginSuccess(user)),
+          Rx.Observable.fromPromise(fetch(`https://www.reddit.com/r/aww.json`).then(response => response.json()))
+            .map(response => {
+              console.log(response);
+              console.log(response.data.children.map(child => child.data));
+              //loginSuccess({id: '123456', name: 'Llanos'})
+            })
+        )
+      /*.mergeMap((action: actionType) =>
+        Rx.Observable.of({id: '123456', name: 'Llanos', username: action.username, password: action.password})
+          .delay(2000)
+          .map(user => loginSuccess(user))*/
     );
 }

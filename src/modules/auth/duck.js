@@ -5,8 +5,6 @@ import { ActionsObservable } from "redux-observable";
 const AUTH_REQUEST = 'AUTH_REQUEST';
 const AUTH_SUCCESS = 'AUTH_SUCCESS';
 
-const AUTH_ACTIONS = [AUTH_REQUEST, AUTH_SUCCESS];
-
 type actionType = {
   +type: string,
   +user?: any,
@@ -44,7 +42,7 @@ export const actions = {
 
 
 // Reducer
-export default function authReducer(state: authStateType = {}, action: actionType): authStateType {
+export default function reducer(state: authStateType = {}, action: actionType): authStateType {
   switch (action.type) {
     case AUTH_REQUEST:
       return {
@@ -60,7 +58,7 @@ export default function authReducer(state: authStateType = {}, action: actionTyp
 }
 
 // EPIC
-export function authEpic(action$: ActionsObservable<any>) {
+export function authEpic(action$: ActionsObservable<actionType>) {
   return action$.ofType(AUTH_REQUEST)
     .mergeMap((action: actionType) =>
       Rx.Observable.of({id: '123456', name: 'Llanos', username: action.username, password: action.password})

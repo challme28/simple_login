@@ -4,6 +4,7 @@ import { createLogger } from 'redux-logger';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { routerMiddleware, routerActions } from 'react-router-redux';
 import { actions as authActions } from '../modules/auth/duck';
+import { actions as postsActions } from "../modules/posts/duck";
 import { rootEpic, rootReducer } from "../modules/index";
 
 import type { authStateType } from "../modules/auth/duck";
@@ -25,6 +26,7 @@ const configureStore = (initialState?: authStateType) => {
 
   const actionCreators = {
     ...authActions,
+    ...postsActions,
     ...routerActions
   };
 

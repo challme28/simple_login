@@ -48,19 +48,19 @@ export default class Login extends React.Component<Props, State> {
     const {isAuth} = this.props;
     return (
       <div>
-        <form onSubmit={(event) => this.onSubmit(event)}>
+        <form onSubmit={event => this.onSubmit(event)}>
           <input
             name="username"
-            onChange={(event) => this.onChange(event)}/>
+            onChange={event => this.onChange(event)}/>
           <br/>
           <input
             name="password"
-            onChange={(event) => this.onChange(event)}/>
+            onChange={event => this.onChange(event)}/>
           <br/>
           <button
             type="submit"
             disabled={isAuth}
-            onClick={(event) => this.onSubmit(event)}>
+            onClick={event => this.onSubmit(event)}>
             Log In
           </button>
         </form>

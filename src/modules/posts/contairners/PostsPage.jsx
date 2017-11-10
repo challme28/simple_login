@@ -5,8 +5,8 @@ import Posts from '../components/Posts';
 import { actions as PostsActions } from "../duck";
 
 function mapStateToProps(state) {
-  const { selectedSubreddit, postsReducer } = state;
-  console.log(`selectedSubreddit ${selectedSubreddit}`);
+  const { postsReducer } = state;
+  const selectedSubreddit = postsReducer.selectedSubreddit;
   const { isFetching, lastUpdated, items: posts }
     = postsReducer[selectedSubreddit] || { isFetching: true, items: [] };
 

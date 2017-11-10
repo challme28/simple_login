@@ -70,16 +70,7 @@ export const actions = {
 };
 
 // Reducers
-export function selectedSubreddit(state = 'reactjs', action) {
-  switch (action.type) {
-    case SELECT_SUBREDDIT:
-      return action.subreddit;
-    default:
-      return state
-  }
-}
-
-export default function reducer(state = {}, action) {
+export default function reducer(state = { selectedSubreddit: 'reactjs' }, action) {
   let subredditState = { isFetching: false, didInvalidate: false, items: [] };
   switch (action.type) {
     case INVALIDATE_SUBREDDIT:
@@ -109,6 +100,11 @@ export default function reducer(state = {}, action) {
           items: action.posts,
           lastUpdated: action.receivedAt
         }
+      };
+    case SELECT_SUBREDDIT:
+      return {
+        ...state,
+        selectedSubreddit: action.subreddit
       };
     default:
       return state;

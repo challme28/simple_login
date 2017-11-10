@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { combineEpics } from 'redux-observable';
 import { routerReducer } from 'react-router-redux';
 import authReducer, { authEpic } from './auth/duck';
-import { postsBySubreddit, selectedSubreddit, postsEpic } from "./posts/duck";
+import postsReducer, { selectedSubreddit, postsEpic } from "./posts/duck";
 
 export const rootEpic = combineEpics(
   authEpic,
@@ -11,7 +11,7 @@ export const rootEpic = combineEpics(
 
 export const rootReducer = combineReducers({
   authReducer,
-  postsBySubreddit,
+  postsReducer,
   selectedSubreddit,
   routing: routerReducer
 });

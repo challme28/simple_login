@@ -46,7 +46,7 @@ export function fetchPostsIfNeeded(subreddit) {
 }
 
 function shouldFetchPosts(state, subreddit) {
-  const posts = state.postsBySubreddit[subreddit];
+  const posts = state.postsReducer[subreddit];
   if (!posts) {
     return true
   } else if (posts.isFetching) {
@@ -79,40 +79,39 @@ export function selectedSubreddit(state = 'reactjs', action) {
   }
 }
 
-export function posts(state = { isFetching: false, didInvalidate: false, items: [] }, action) {
+export default function reducer(state = {}, action) {
+  let subredditState = { isFetching: false, didInvalidate: false, items: [] };
   switch (action.type) {
     case INVALIDATE_SUBREDDIT:
-      return { ...state, didInvalidate: true };
+      return {
+        ...state,
+        [action.subreddit]: {
+          ...subredditState,
+          didInvalidate: true
+        }
+      };
     case REQUEST_POSTS:
       return {
         ...state,
-        isFetching: true,
-        didInvalidate: false
+        [action.subreddit]: {
+          ...subredditState,
+          isFetching: true,
+          didInvalidate: false
+        }
       };
     case RECEIVE_POSTS:
       return {
         ...state,
-        isFetching: false,
-        didInvalidate: false,
-        items: action.posts,
-        lastUpdated: action.receivedAt
+        [action.subreddit]: {
+          ...subredditState,
+          isFetching: false,
+          didInvalidate: false,
+          items: action.posts,
+          lastUpdated: action.receivedAt
+        }
       };
     default:
-      return state
-  }
-}
-
-export function postsBySubreddit(state = {}, action) {
-  switch (action.type) {
-    case INVALIDATE_SUBREDDIT:
-    case RECEIVE_POSTS:
-    case REQUEST_POSTS:
-      return {
-        ...state,
-        [action.subreddit]: posts(state[action.subreddit], action)
-      };
-    default:
-      return state
+      return state;
   }
 }
 

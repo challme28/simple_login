@@ -6,6 +6,7 @@ import { actions as PostsActions } from "../duck";
 
 function mapStateToProps(state) {
   const { selectedSubreddit, postsBySubreddit } = state;
+  console.log(`selectedSubreddit ${selectedSubreddit}`);
   const { isFetching, lastUpdated, items: posts }
     = postsBySubreddit[selectedSubreddit] || { isFetching: true, items: [] };
 

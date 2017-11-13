@@ -1,4 +1,7 @@
+// @flow
 import Rx from 'rxjs';
+import { ActionsObservable } from "redux-observable";
+import type { Store } from 'redux';
 
 // Actions
 const REQUEST_POSTS = 'REQUEST_POSTS';
@@ -7,29 +10,52 @@ const SELECT_SUBREDDIT = 'SELECT_SUBREDDIT';
 const INVALIDATE_SUBREDDIT = 'INVALIDATE_SUBREDDIT';
 const FETCH_POSTS_IF_NEEDED = 'FETCH_POSTS_IF_NEEDED';
 
+type postsActions = {
+  +type: string,
+  +subreddit: string,
+  +posts?: Array<any>,
+  +receivedAt?: number,
+}
+
+export type postsStateType = {
+  +reactjs?: Array<{
+    +didInvalidate: boolean,
+    +isFetching: boolean,
+    +items: [],
+    +lastUpdated: number
+  }>,
+  +frontend?: Array<{
+    +didInvalidate: boolean,
+    +isFetching: boolean,
+    +items: [],
+    +lastUpdated: number
+  }>,
+  +selectedSubreddit: string,
+}
+
 // Action Creators
-export function selectSubreddit(subreddit) {
+export function selectSubreddit(subreddit: string): postsActions {
   return {
     type: SELECT_SUBREDDIT,
     subreddit
   }
 }
 
-export function invalidateSubreddit(subreddit) {
+export function invalidateSubreddit(subreddit: string): postsActions {
   return {
     type: INVALIDATE_SUBREDDIT,
     subreddit
   }
 }
 
-export function requestPosts(subreddit) {
+export function requestPosts(subreddit: string): postsActions {
   return {
     type: REQUEST_POSTS,
     subreddit
   }
 }
 
-export function receivePosts(subreddit, json) {
+export function receivePosts(subreddit: string, json: any): postsActions {
   return {
     type: RECEIVE_POSTS,
     subreddit,
@@ -38,15 +64,15 @@ export function receivePosts(subreddit, json) {
   }
 }
 
-export function fetchPostsIfNeeded(subreddit) {
+export function fetchPostsIfNeeded(subreddit: string): postsActions {
   return {
     type: FETCH_POSTS_IF_NEEDED,
     subreddit
   }
 }
 
-function shouldFetchPosts(state, subreddit) {
-  const posts = state.postsReducer[subreddit];
+function shouldFetchPosts(state: postsStateType, subreddit: string): boolean {
+  const posts = state[subreddit];
   if (!posts) {
     return true
   } else if (posts.isFetching) {
@@ -70,7 +96,8 @@ export const actions = {
 };
 
 // Reducers
-export default function reducer(state = { selectedSubreddit: 'reactjs' }, action) {
+export default function reducer(state: postsStateType = { selectedSubreddit: 'reactjs' },
+                                action: postsActions): postsStateType {
   let subredditState = { isFetching: false, didInvalidate: false, items: [] };
   switch (action.type) {
     case INVALIDATE_SUBREDDIT:
@@ -112,10 +139,10 @@ export default function reducer(state = { selectedSubreddit: 'reactjs' }, action
 }
 
 // Epic
-
-export function postsEpic(action$, store) {
+export function postsEpic(action$: ActionsObservable<postsActions>,
+                          store: Store<postsStateType, postsActions>) {
   return action$.ofType(FETCH_POSTS_IF_NEEDED)
-    .filter(action => shouldFetchPosts(store.getState(), action.subreddit))
+    .filter(action => shouldFetchPosts(store.getState().postsReducer, action.subreddit))
     .switchMap(action =>
       Rx.Observable.concat(
         Rx.Observable.of(requestPosts(action.subreddit)),

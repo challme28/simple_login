@@ -1,23 +1,33 @@
+// @flow
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Picker from '../components/Picker'
 import PostsList from '../components/PostsList'
 
-export default class Posts extends React.Component {
+type Props = {
+  +fetchPostsIfNeeded: Function,
+  +selectSubreddit: Function,
+  +invalidateSubreddit: Function,
+  +selectedSubreddit: string,
+  +posts: Array<any>,
+  +isFetching: boolean,
+  +lastUpdated?: number,
+}
+export default class Posts extends React.Component<Props> {
   componentDidMount() {
     const { fetchPostsIfNeeded, selectedSubreddit } = this.props;
     fetchPostsIfNeeded(selectedSubreddit);
   }
 
-  handleChange(e) {
-    const nextSubreddit = e.target.value;
+  handleChange(event: SyntheticEvent<HTMLSelectElement>) {
+    const nextSubreddit = event.currentTarget.value;
     const { fetchPostsIfNeeded, selectSubreddit } = this.props;
     selectSubreddit(nextSubreddit);
     fetchPostsIfNeeded(nextSubreddit);
   }
 
-  handleRefreshClick(e) {
-    e.preventDefault();
+  handleRefreshClick(event: Event) {
+    event.preventDefault();
     const { fetchPostsIfNeeded, invalidateSubreddit, selectedSubreddit } = this.props;
     invalidateSubreddit(selectedSubreddit);
     fetchPostsIfNeeded(selectedSubreddit);

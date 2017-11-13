@@ -7,12 +7,12 @@ import { actions as AuthActions } from '../duck';
 
 import type { authStateType } from '../duck';
 
-export type authReducer = {
+type authReducer = {
   authReducer: authStateType;
 }
 
 function mapStateToProps(state: authReducer): authStateType {
-  const authReducer = state.authReducer;
+  const { authReducer } = state;
   return {
     user: authReducer.user,
     isAuth: authReducer.isAuth

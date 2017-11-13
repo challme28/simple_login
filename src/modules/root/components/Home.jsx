@@ -8,6 +8,8 @@ export default class Home extends React.Component<{}> {
       <div>
         <h2>Home</h2>
         <Link to="/login">Login</Link>
+        <br/>
+        <Link to="/posts">Posts</Link>
       </div>
     )
   }

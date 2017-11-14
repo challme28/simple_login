@@ -60,9 +60,18 @@ export default function reducer(state: authStateType = {}, action: authActions):
 // EPIC
 export function authEpic(action$: ActionsObservable<authActions>) {
   return action$.ofType(AUTH_REQUEST)
-      .mergeMap((action: authActions) =>
-        Rx.Observable.of({id: '123456', name: 'Llanos', username: action.username, password: action.password})
-          .delay(2000)
-          .map(user => loginSuccess(user))
+    .mergeMap((action: authActions) => {
+        const { username, password } = action;
+        const opts = {
+          method: 'POST',
+          body: JSON.stringify({ username, password }),
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include'
+        };
+        return Rx.Observable.fromPromise(fetch(`/api/auth/login`, opts)
+          .then(response => response.json())
+          .catch(console.log))
+          .map(response => loginSuccess(response));
+      }
     );
 }

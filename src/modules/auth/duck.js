@@ -1,6 +1,7 @@
 // @flow
 import Rx from 'rxjs';
 import {ActionsObservable} from "redux-observable";
+import {opts} from "../../utils/fetchOpts";
 // Actions
 const AUTH_REQUEST = 'AUTH_REQUEST';
 const AUTH_SUCCESS = 'AUTH_SUCCESS';
@@ -111,13 +112,8 @@ export function authEpic(action$: ActionsObservable<authActions>) {
   return action$.ofType(AUTH_REQUEST)
     .mergeMap((action: authActions) => {
         const {username, password} = action;
-        const opts = {
-          method: 'POST',
-          body: JSON.stringify({username, password}),
-          headers: {'Content-Type': 'application/json'},
-          credentials: 'include'
-        };
-        return Rx.Observable.fromPromise(fetch(`/api/auth/login`, opts)
+        return Rx.Observable.fromPromise(fetch(`/api/auth/login`,
+          opts('POST', JSON.stringify({username, password})))
           .then(response => response.json())
           .catch(console.log))
           .map(response => loginSuccess(response));
@@ -128,12 +124,7 @@ export function authEpic(action$: ActionsObservable<authActions>) {
 export function dataEpic(action$: ActionsObservable<authActions>) {
   return action$.ofType(AUTH_TEST)
     .mergeMap(() => {
-      const opts = {
-        method: 'GET',
-        headers: {'Content-Type': 'application/json'},
-        credentials: 'include'
-      };
-      return Rx.Observable.fromPromise(fetch(`/api/data/test`, opts)
+      return Rx.Observable.fromPromise(fetch(`/api/data/test`, opts('GET'))
         .then(response => response.json())
         .catch(console.log))
         .map(data => loginData(data));
@@ -143,12 +134,7 @@ export function dataEpic(action$: ActionsObservable<authActions>) {
 export function logoutEpic(action$: ActionsObservable<authActions>) {
   return action$.ofType(AUTH_LOGOUT)
     .mergeMap(() => {
-      const opts = {
-        method: 'GET',
-        headers: {'Content-Type': 'application/json'},
-        credentials: 'include'
-      };
-      return Rx.Observable.fromPromise(fetch(`api/auth/logout`, opts)
+      return Rx.Observable.fromPromise(fetch(`api/auth/logout`, opts('GET'))
         .then(response => response)
         .catch(console.log))
         .map(() => loggedOut());

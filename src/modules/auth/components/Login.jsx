@@ -81,20 +81,18 @@ export default class Login extends React.Component<Props, State> {
           <br/>
           <br/>
         </form>}
+        <button
+          onClick={event => this.onGetData(event)}>
+          Get data
+        </button>
         {authenticated && <div>
-          <button
-            onClick={event => this.onGetData(event)}>
-            Get data
-          </button>
           <button
             onClick={event => this.onLogout(event)}>
             Logout
           </button>
-          {data &&
-          <ul>
+          {data && <ul>
             {data.map((num, i) => <li key={i}>{num}</li>)}
           </ul>}
-
         </div>}
 
       </div>

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 type Props = {
   +login: (username: string, password: string) => {},
   +loginTest: Function,
+  +logout: Function,
   +isAuth: boolean,
   +authenticated: boolean,
   +user?: any,
@@ -52,10 +53,16 @@ export default class Login extends React.Component<Props, State> {
     this.props.loginTest();
   }
 
+  onLogout(event: Event) {
+    event.preventDefault();
+    this.props.logout();
+  }
+
   render() {
     const {isAuth, authenticated, data} = this.props;
     return (
       <div>
+        {!authenticated &&
         <form onSubmit={event => this.onSubmit(event)}>
           <input
             name="username"
@@ -69,20 +76,27 @@ export default class Login extends React.Component<Props, State> {
             type="submit"
             disabled={isAuth}
             onClick={event => this.onSubmit(event)}>
-            Log In
+            Login
           </button>
           <br/>
           <br/>
-          {authenticated && <button
-            type="submit"
+        </form>}
+        {authenticated && <div>
+          <button
             onClick={event => this.onGetData(event)}>
             Get data
-          </button>}
+          </button>
+          <button
+            onClick={event => this.onLogout(event)}>
+            Logout
+          </button>
           {data &&
           <ul>
             {data.map((num, i) => <li key={i}>{num}</li>)}
           </ul>}
-        </form>
+
+        </div>}
+
       </div>
     )
   }
@@ -91,6 +105,7 @@ export default class Login extends React.Component<Props, State> {
 Login.propTypes = {
   login: PropTypes.func.isRequired,
   loginTest: PropTypes.func.isRequired,
+  logout: PropTypes.func.isRequired,
   isAuth: PropTypes.bool,
   authenticated: PropTypes.bool,
   user: PropTypes.object,

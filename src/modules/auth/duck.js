@@ -6,6 +6,8 @@ const AUTH_REQUEST = 'AUTH_REQUEST';
 const AUTH_SUCCESS = 'AUTH_SUCCESS';
 const AUTH_TEST = 'AUTH_TEST';
 const AUTH_DATA = 'AUTH_DATA';
+const AUTH_LOGOUT = 'AUTH_LOGOUT';
+const AUTH_LOGGED_OUT = 'AUTH_LOGGED_OUT';
 
 type authActions = {
   +type: string,
@@ -51,15 +53,29 @@ export function loginData(data: Array<number>): authActions {
   };
 }
 
+export function logout(): authActions {
+  return {
+    type: AUTH_LOGOUT,
+  }
+}
+
+export function loggedOut(): authActions {
+  return {
+    type: AUTH_LOGGED_OUT,
+  }
+}
+
 export const actions = {
   AUTH_REQUEST,
   AUTH_SUCCESS,
   AUTH_TEST,
   AUTH_DATA,
+  AUTH_LOGOUT,
   login,
   loginSuccess,
   loginTest,
   loginData,
+  logout,
 };
 
 
@@ -77,8 +93,13 @@ export default function reducer(state: authStateType = {}, action: authActions):
       };
     case AUTH_DATA:
       return {
-        authenticated: true,
+        ...state,
         data: action.data
+      };
+    case AUTH_LOGGED_OUT:
+      return {
+        ...state,
+        authenticated: false
       };
     default:
       return state;
@@ -117,4 +138,19 @@ export function dataEpic(action$: ActionsObservable<authActions>) {
         .catch(console.log))
         .map(data => loginData(data));
     });
+}
+
+export function logoutEpic(action$: ActionsObservable<authActions>) {
+  return action$.ofType(AUTH_LOGOUT)
+    .mergeMap(() => {
+      const opts = {
+        method: 'GET',
+        headers: {'Content-Type': 'application/json'},
+        credentials: 'include'
+      };
+      return Rx.Observable.fromPromise(fetch(`api/auth/logout`, opts)
+        .then(response => response)
+        .catch(console.log))
+        .map(() => loggedOut());
+    })
 }

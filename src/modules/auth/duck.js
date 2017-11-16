@@ -127,7 +127,9 @@ export function authEpic(action$: ActionsObservable<authActions>) {
         return Rx.Observable.fromPromise(fetch(`/api/auth/login`,
           opts('POST', JSON.stringify({ username, password })))
           .then(r => r.ok ? r.json() : r.json().then(Promise.reject.bind(Promise))))
-          .map(response => loginSuccess(response))
+          .flatMap(response => Rx.Observable.concat(
+            Rx.Observable.of(loginSuccess(response)),
+            Rx.Observable.of(loginTest())))
           .catch(e => Rx.Observable.of(error(e.message)));
       }
     );

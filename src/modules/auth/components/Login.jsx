@@ -35,7 +35,7 @@ export default class Login extends React.Component<Props, State> {
 
   onSubmit(event: Event) {
     event.preventDefault();
-    const {usernameInput, passwordInput} = this.state;
+    const { usernameInput, passwordInput } = this.state;
     this.props.login(usernameInput.value, passwordInput.value);
   }
 
@@ -59,7 +59,7 @@ export default class Login extends React.Component<Props, State> {
   }
 
   render() {
-    const {isAuth, authenticated, data} = this.props;
+    const { isAuth, authenticated, data, errorMessage } = this.props;
     return (
       <div>
         {!authenticated &&
@@ -94,7 +94,8 @@ export default class Login extends React.Component<Props, State> {
             {data.map((num, i) => <li key={i}>{num}</li>)}
           </ul>}
         </div>}
-
+        <br/>
+        {errorMessage && <span style={{ color: "hotpink" }}>{errorMessage}</span>}
       </div>
     )
   }

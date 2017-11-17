@@ -21,7 +21,7 @@ type authActions = {
 };
 
 export type authStateType = {
-  +isAuth?: boolean,
+  +isAuthing?: boolean,
   +authenticated?: boolean,
   +user?: any,
   +data?: Array<number>,
@@ -87,11 +87,11 @@ export const actions = {
 
 
 // Reducer
-export default function reducer(state: authStateType = { isAuth: false }, action: authActions): authStateType {
+export default function reducer(state: authStateType = { isAuthing: false }, action: authActions): authStateType {
   switch (action.type) {
     case AUTH_REQUEST:
       return {
-        isAuth: true
+        isAuthing: true
       };
     case AUTH_SUCCESS:
       return {
@@ -110,8 +110,7 @@ export default function reducer(state: authStateType = { isAuth: false }, action
       };
     case ERROR:
       return {
-        ...state,
-        isAuth: false,
+        isAuthing: false,
         errorMessage: action.errorMessage
       };
     default:

@@ -15,7 +15,7 @@ function mapStateToProps(state: authReducer): authStateType {
   const { authReducer } = state;
   return {
     user: authReducer.user,
-    isAuth: authReducer.isAuth,
+    isAuth: authReducer.isAuthing,
     authenticated: authReducer.authenticated,
     data: authReducer.data,
     errorMessage: authReducer.errorMessage,

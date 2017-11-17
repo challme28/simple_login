@@ -6,7 +6,7 @@ type Props = {
   +login: (username: string, password: string) => {},
   +loginTest: Function,
   +logout: Function,
-  +isAuth: boolean,
+  +isAuthing: boolean,
   +authenticated: boolean,
   +user?: any,
   +onChange?: Function,
@@ -59,7 +59,7 @@ export default class Login extends React.Component<Props, State> {
   }
 
   render() {
-    const { isAuth, authenticated, data, errorMessage } = this.props;
+    const { isAuthing, authenticated, data, errorMessage } = this.props;
     return (
       <div>
         {!authenticated &&
@@ -74,7 +74,7 @@ export default class Login extends React.Component<Props, State> {
           <br/>
           <button
             type="submit"
-            disabled={isAuth}
+            disabled={isAuthing}
             onClick={event => this.onSubmit(event)}>
             Login
           </button>
@@ -105,7 +105,7 @@ Login.propTypes = {
   login: PropTypes.func.isRequired,
   loginTest: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired,
-  isAuth: PropTypes.bool,
+  isAuthing: PropTypes.bool,
   authenticated: PropTypes.bool,
   user: PropTypes.object,
   onChange: PropTypes.func,

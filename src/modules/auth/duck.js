@@ -105,11 +105,11 @@ export default function reducer(state: authStateType = { isAuthing: false }, act
       };
     case AUTH_LOGGED_OUT:
       return {
-        ...state,
         authenticated: false
       };
     case ERROR:
       return {
+        ...state,
         isAuthing: false,
         errorMessage: action.errorMessage
       };
